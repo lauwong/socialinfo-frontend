@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-const props = defineProps(["mode"]);
 const emit = defineEmits(["setPostViewMode"]);
 
-const mode = ref(props.mode);
+const mode = ref("following");
 
 function viewFollowing() {
   mode.value = "following";
@@ -18,15 +17,19 @@ function viewAll() {
 </script>
 
 <template>
-  <button v-on:click="viewFollowing">Following</button>
-  <button v-on:click="viewAll">All</button>
+  <div class="pure-button-group" role="group">
+    <button class="pure-button" :class="{ selected: mode === 'following' }" v-on:click="viewFollowing">Following</button>
+    <button class="pure-button" :class="{ selected: mode === 'all' }" v-on:click="viewAll">All</button>
+  </div>
 </template>
 
 <style scoped>
-form {
-  display: flex;
-  gap: 0.5em;
-  padding: 1em;
-  align-items: center;
+div.pure-button-group {
+  padding: 2em;
+}
+
+.selected {
+  background: #0078e7;
+  color: var(--base-bg);
 }
 </style>
