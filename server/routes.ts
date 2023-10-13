@@ -77,23 +77,13 @@ class Routes {
     const u = WebSession.getUser(session);
     const following = await Follow.getFollows(u);
 
-    let feed;
-    if (author) {
-      feed = await Post.getPosts({
-        author: {
-          $and: {
-            $eq: author,
-            $in: following.map((f) => f.other),
-          },
-        },
-      });
-    } else {
-      feed = await Post.getPosts({
-        author: {
-          $in: following.map((f) => f.other),
-        },
-      });
-    }
+    const filt = following.map((f) => f.other).filter((name) => (author ? name.toString() === author : true));
+
+    const feed = await Post.getPosts({
+      author: {
+        $in: filt,
+      },
+    });
     return await Responses.posts(feed);
   }
 

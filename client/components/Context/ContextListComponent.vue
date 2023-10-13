@@ -6,7 +6,6 @@ import { useUserStore } from "@/stores/user";
 import { fetchy } from "@/utils/fetchy";
 import { storeToRefs } from "pinia";
 import { onBeforeMount, ref } from "vue";
-import SearchContextForm from "./SearchContextForm.vue";
 
 const { isLoggedIn } = storeToRefs(useUserStore());
 
@@ -15,7 +14,7 @@ let contexts = ref<Array<Record<string, string>>>([]);
 let editing = ref("");
 let searchAuthor = ref("");
 
-async function getContexts(author?: string) {
+async function getContexts(postId: string) {
   let query: Record<string, string> = author !== undefined ? { author } : {};
   let contextResults;
   try {
