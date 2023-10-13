@@ -15,11 +15,11 @@ let posts = ref<Array<Record<string, string>>>([]);
 let editing = ref("");
 let searchAuthor = ref("");
 
-async function getPosts(author?: string) {
+async function getPosts(mode: string = "following", author?: string) {
   let query: Record<string, string> = author !== undefined ? { author } : {};
   let postResults;
   try {
-    postResults = await fetchy("api/posts", "GET", { query });
+    postResults = await fetchy(`api/posts/${mode}`, "GET", { query });
   } catch (_) {
     return;
   }
@@ -32,7 +32,7 @@ function updateEditing(id: string) {
 }
 
 onBeforeMount(async () => {
-  await getPosts();
+  await getPosts("following");
   loaded.value = true;
 });
 </script>
