@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useUserStore } from "@/stores/user";
+import { useViewStore } from "@/stores/view";
 import { formatDate } from "@/utils/formatDate";
 import { storeToRefs } from "pinia";
 import { fetchy } from "../../utils/fetchy";
@@ -7,6 +8,7 @@ import { fetchy } from "../../utils/fetchy";
 const props = defineProps(["post"]);
 const emit = defineEmits(["editPost", "refreshPosts", "openContexts"]);
 const { currentUsername } = storeToRefs(useUserStore());
+const { openPostContextView, currentView } = useViewStore();
 
 const deletePost = async () => {
   try {
@@ -20,10 +22,10 @@ const deletePost = async () => {
 
 <template>
   <p class="author">{{ props.post.author }}</p>
-  <button @click="emit('openContexts', props.post)">Open Contexts</button>
+  <button v-if="currentView === 'post'" @click="openPostContextView(props.post)">Open Contexts</button>
   <p>{{ props.post.content }}</p>
   <div class="base">
-    <menu v-if="props.post.author == currentUsername">
+    <menu v-if="props.post.author == currentUsername && currentView === 'post'">
       <li><button class="btn-small pure-button" @click="emit('editPost', props.post._id)">Edit</button></li>
       <li><button class="button-error btn-small pure-button" @click="deletePost">Delete</button></li>
     </menu>

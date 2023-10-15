@@ -7,18 +7,19 @@ import { useUserStore } from "@/stores/user";
 import { fetchy } from "@/utils/fetchy";
 import { storeToRefs } from "pinia";
 import { onBeforeMount, ref } from "vue";
+import { useViewStore } from "../../stores/view";
 
 const { isLoggedIn } = storeToRefs(useUserStore());
 
-const props = defineProps(["view"]);
+const { openedPost } = storeToRefs(useViewStore());
 
 const loaded = ref(false);
 let contexts = ref<Array<Record<string, string>>>([]);
 let editing = ref("");
-const postId = ref(props.view);
 
 async function getContexts() {
-  let query: Record<string, string> = { postId };
+  const parent = openedPost.value._id;
+  let query: Record<string, string> = { parent };
   let contextResults;
   try {
     contextResults = await fetchy("api/contexts", "GET", { query });
@@ -28,28 +29,19 @@ async function getContexts() {
   contexts.value = contextResults;
 }
 
-const post = computed(async () => {
-  let postResult;
-  try {
-    postResult = await fetchy(`api/posts/${postId.value}`, "GET");
-  } catch (_) {
-    return;
-  }
-  return postResult;
-});
-
 function updateEditing(id: string) {
   editing.value = id;
 }
 
 onBeforeMount(async () => {
+  await getContexts();
   loaded.value = true;
 });
 </script>
 
 <template>
   <section>
-    <PostComponent :post="post" />
+    <PostComponent :post="openedPost" />
   </section>
   <section v-if="isLoggedIn">
     <h2>Create a context:</h2>

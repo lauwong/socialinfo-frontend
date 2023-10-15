@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { fetchy } from "../../utils/fetchy";
+import { useViewStore } from "../../stores/view";
 
 const content = ref("");
 const emit = defineEmits(["refreshContexts"]);
+const { resetStore } = useViewStore();
 
 const createContext = async (content: string) => {
   try {
@@ -26,7 +28,10 @@ const emptyForm = () => {
   <form @submit.prevent="createContext(content)">
     <label for="content">Context Contents:</label>
     <textarea id="content" v-model="content" placeholder="Create a context!" required> </textarea>
-    <button type="submit" class="pure-button-primary pure-button">Create Context</button>
+    <menu>
+      <button type="submit" class="pure-button-primary pure-button">Create Context</button>
+      <button class="btn-small pure-button" @click="resetStore()">Cancel</button>
+    </menu>
   </form>
 </template>
 
