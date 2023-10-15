@@ -17,6 +17,8 @@ let editing = ref("");
 let searchAuthor = ref("");
 let viewMode = ref("following");
 
+const emit = defineEmits(["openCtx"]);
+
 async function getPosts(author?: string) {
   let query: Record<string, string> = author !== undefined ? { author } : {};
   let postResults;
@@ -38,6 +40,10 @@ async function updateMode(mode: string) {
   await getPosts();
 }
 
+function passEmit(post: Record<string, string>) {
+  emit("openCtx", post);
+}
+
 onBeforeMount(async () => {
   await getPosts();
   loaded.value = true;
@@ -57,7 +63,7 @@ onBeforeMount(async () => {
   </div>
   <section class="posts" v-if="loaded && posts.length !== 0">
     <article v-for="post in posts" :key="post._id">
-      <PostComponent v-if="editing !== post._id" :post="post" @refreshPosts="getPosts" @editPost="updateEditing" />
+      <PostComponent v-if="editing !== post._id" :post="post" @openContexts="passEmit" @refreshPosts="getPosts" @editPost="updateEditing" />
       <EditPostForm v-else :post="post" @refreshPosts="getPosts" @editPost="updateEditing" />
     </article>
   </section>

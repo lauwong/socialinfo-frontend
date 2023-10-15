@@ -87,6 +87,12 @@ class Routes {
     return await Responses.posts(feed);
   }
 
+  @Router.get("/posts/:_id")
+  async getPost(_id: ObjectId) {
+    const post = await Post.getById(_id);
+    return Responses.post(post);
+  }
+
   @Router.post("/posts")
   async createPost(session: WebSessionDoc, content: string, options?: PostOptions) {
     const user = WebSession.getUser(session);
@@ -155,6 +161,13 @@ class Routes {
     await Post.isPost(parent);
     const created = await Context.create(new ObjectId(parent), content, user);
     return { msg: created.msg, context: await Responses.context(created.context) };
+  }
+
+  @Router.delete("/contexts/:_id")
+  async deleteContext(session: WebSessionDoc, _id: ObjectId) {
+    const user = WebSession.getUser(session);
+    await Context.isAuthor(user, _id);
+    return await Context.delete(_id);
   }
 
   @Router.post("/upvotes/posts/:_id")
