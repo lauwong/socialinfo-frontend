@@ -1,16 +1,23 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { fetchy } from "../../utils/fetchy";
 import { useViewStore } from "../../stores/view";
+import { fetchy } from "../../utils/fetchy";
 
 const content = ref("");
 const emit = defineEmits(["refreshContexts"]);
-const { resetStore } = useViewStore();
+const { openedPost, resetStore } = useViewStore();
+
+const post = ref(openedPost);
 
 const createContext = async (content: string) => {
+  if (!post.value) {
+    throw new Error("Tried to create context for undefined post!");
+  }
+  const parent = post.value._id;
+
   try {
     await fetchy("api/contexts", "POST", {
-      body: { content },
+      body: { parent, content },
     });
   } catch (_) {
     return;

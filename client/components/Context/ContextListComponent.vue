@@ -18,7 +18,13 @@ let contexts = ref<Array<Record<string, string>>>([]);
 let editing = ref("");
 
 async function getContexts() {
-  const parent = openedPost.value._id;
+  const post = openedPost.value;
+
+  if (!post) {
+    throw new Error("Tried to open contexts for undefined post");
+  }
+
+  const parent = post._id;
   let query: Record<string, string> = { parent };
   let contextResults;
   try {
