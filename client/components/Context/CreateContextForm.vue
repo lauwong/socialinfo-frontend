@@ -1,12 +1,10 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import router from "../../router";
-import { useViewStore } from "../../stores/view";
 import { fetchy } from "../../utils/fetchy";
 
 const content = ref("");
 const emit = defineEmits(["refreshContexts"]);
-const { resetStore } = useViewStore();
 
 const props = defineProps(["post"]);
 const post = ref(props.post);

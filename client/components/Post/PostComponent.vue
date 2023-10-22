@@ -1,16 +1,17 @@
 <script setup lang="ts">
+import router from "@/router";
 import { useUserStore } from "@/stores/user";
-import { useViewStore } from "@/stores/view";
 import { formatDate } from "@/utils/formatDate";
 import { storeToRefs } from "pinia";
-import router from "../../router";
+import { ref } from "vue";
 import { fetchy } from "../../utils/fetchy";
 import VoteComponent from "../VoteComponent.vue";
 
-const props = defineProps(["post"]);
+const props = defineProps(["post", "showButtons"]);
 const emit = defineEmits(["editPost", "refreshPosts", "openContexts"]);
 const { currentUsername } = storeToRefs(useUserStore());
-const { currentView } = useViewStore();
+
+const showButtons = ref(props.showButtons);
 
 const deletePost = async () => {
   try {
@@ -34,10 +35,10 @@ function openContext() {
 
 <template>
   <p @click="openUser" class="author">{{ props.post.author }}</p>
-  <button v-if="currentView === 'post'" @click="openContext">Open Contexts</button>
+  <button v-if="showButtons" @click="openContext">Open Contexts</button>
   <p>{{ props.post.content }}</p>
   <div class="base">
-    <menu v-if="props.post.author == currentUsername && currentView === 'post'">
+    <menu v-if="props.post.author == currentUsername && showButtons">
       <li><button class="btn-small pure-button" @click="emit('editPost', props.post._id)">Edit</button></li>
       <li><button class="button-error btn-small pure-button" @click="deletePost">Delete</button></li>
     </menu>
@@ -46,7 +47,7 @@ function openContext() {
       <p v-else>Created on: {{ formatDate(props.post.dateCreated) }}</p>
     </article>
   </div>
-  <VoteComponent v-if="currentView === 'post'" :item-id="$props.post._id" />
+  <VoteComponent v-if="showButtons" :item-id="$props.post._id" />
 </template>
 
 <style scoped>

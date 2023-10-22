@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import EditPostForm from "@/components/Post/EditPostForm.vue";
 import PostComponent from "@/components/Post/PostComponent.vue";
+import router from "@/router";
 import { fetchy } from "@/utils/fetchy";
 import { onBeforeMount, ref } from "vue";
-import router from "../../router";
 
 const props = defineProps(["user"]);
 
@@ -45,7 +45,7 @@ onBeforeMount(async () => {
 <template>
   <section class="posts" v-if="loaded && posts.length !== 0">
     <article v-for="post in posts" :key="post._id">
-      <PostComponent v-if="editing !== post._id" :post="post" @refreshPosts="getPosts" @editPost="updateEditing" />
+      <PostComponent v-if="editing !== post._id" :post="post" :show-buttons="true" @refreshPosts="getPosts" @editPost="updateEditing" />
       <EditPostForm v-else :post="post" @refreshPosts="getPosts" @editPost="updateEditing" />
     </article>
   </section>

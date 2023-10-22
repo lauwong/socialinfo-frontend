@@ -11,11 +11,15 @@ export default class FollowConcept {
   public readonly follows = new DocCollection<FollowDoc>("follows");
 
   async follow(user: ObjectId, other: ObjectId) {
-
     await this.isNotFollowing(user, other);
 
-    await this.follows.createOne({ user, other })
+    await this.follows.createOne({ user, other });
     return { msg: `Followed!` };
+  }
+
+  async isFollowing(user: ObjectId, other: ObjectId) {
+    const follow = await this.follows.readOne({ user, other });
+    return { msg: `Checked follow status!`, value: follow !== null };
   }
 
   async unfollow(user: ObjectId, other: ObjectId) {

@@ -134,6 +134,14 @@ class Routes {
     return await Responses.followers(await Follow.getFollowers(user));
   }
 
+  @Router.get("/follows/following/:user")
+  async isFollowing(session: WebSessionDoc, user: string) {
+    // Gets the users that the session user is following
+    const u = WebSession.getUser(session);
+    const other = (await User.getUserByUsername(user))._id;
+    return await Follow.isFollowing(u, other);
+  }
+
   @Router.post("/follows/:user")
   async follow(session: WebSessionDoc, user: string) {
     const u = WebSession.getUser(session);

@@ -1,8 +1,9 @@
 <script setup lang="ts">
+import router from "@/router";
 import { onBeforeMount, ref } from "vue";
 import { useRoute } from "vue-router";
+import FollowButton from "../components/Follow/FollowButton.vue";
 import UserPostListComponent from "../components/Post/UserPostListComponent.vue";
-import router from "../router";
 
 const route = useRoute();
 const username = ref();
@@ -18,9 +19,7 @@ onBeforeMount(async () => {
 <template>
   <main>
     <h1>{{ username }}</h1>
-    <div id="follow-button">
-      <button class="pure-button" id="follow">Follow</button>
-    </div>
+    <FollowButton :user="username" />
     <UserPostListComponent v-if="loaded" v-bind:user="username" :name="'Hello'" />
   </main>
 </template>

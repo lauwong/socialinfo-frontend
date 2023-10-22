@@ -1,8 +1,8 @@
 <script setup lang="ts">
+import router from "@/router";
 import { onBeforeMount, ref } from "vue";
 import { useRoute } from "vue-router";
 import ContextListComponent from "../components/Context/ContextListComponent.vue";
-import router from "../router";
 
 const route = useRoute();
 
