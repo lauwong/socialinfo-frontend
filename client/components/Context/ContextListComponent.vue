@@ -7,24 +7,37 @@ import { useUserStore } from "@/stores/user";
 import { fetchy } from "@/utils/fetchy";
 import { storeToRefs } from "pinia";
 import { onBeforeMount, ref } from "vue";
-import { useViewStore } from "../../stores/view";
 
 const { isLoggedIn } = storeToRefs(useUserStore());
 
-const { openedPost } = storeToRefs(useViewStore());
+// const { openPost } = storeToRefs(useViewStore());
+
+const props = defineProps(["postId"]);
+
+const openPost = ref<Record<string, string>>();
 
 const loaded = ref(false);
 let contexts = ref<Array<Record<string, string>>>([]);
 let editing = ref("");
+const postId = ref(props.postId);
+
+async function getPost() {
+  let postResult;
+  try {
+    postResult = await fetchy(`api/posts/${postId.value}`, "GET");
+  } catch (_) {
+    return;
+  }
+  openPost.value = postResult;
+  return postResult;
+}
 
 async function getContexts() {
-  const post = openedPost.value;
-
-  if (!post) {
+  if (!openPost.value) {
     throw new Error("Tried to open contexts for undefined post");
   }
 
-  const parent = post._id;
+  const parent = openPost.value._id;
   let query: Record<string, string> = { parent };
   let contextResults;
   try {
@@ -40,6 +53,7 @@ function updateEditing(id: string) {
 }
 
 onBeforeMount(async () => {
+  await getPost();
   await getContexts();
   loaded.value = true;
 });
@@ -47,11 +61,11 @@ onBeforeMount(async () => {
 
 <template>
   <section>
-    <PostComponent :post="openedPost" />
+    <PostComponent v-if="loaded" :post="openPost" />
   </section>
   <section v-if="isLoggedIn">
     <h2>Create a context:</h2>
-    <CreateContextForm @refreshContexts="getContexts" />
+    <CreateContextForm @refreshContexts="getContexts" :post="openPost" />
   </section>
   <div class="row">
     <h2>Contexts:</h2>

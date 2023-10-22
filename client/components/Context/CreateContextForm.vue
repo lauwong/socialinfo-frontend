@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import router from "../../router";
 import { useViewStore } from "../../stores/view";
 import { fetchy } from "../../utils/fetchy";
 
 const content = ref("");
 const emit = defineEmits(["refreshContexts"]);
-const { openedPost, resetStore } = useViewStore();
+const { resetStore } = useViewStore();
 
-const post = ref(openedPost);
+const props = defineProps(["post"]);
+const post = ref(props.post);
 
 const createContext = async (content: string) => {
   if (!post.value) {
@@ -29,6 +31,10 @@ const createContext = async (content: string) => {
 const emptyForm = () => {
   content.value = "";
 };
+
+const returnHome = () => {
+  void router.push({ path: "/" });
+};
 </script>
 
 <template>
@@ -37,7 +43,7 @@ const emptyForm = () => {
     <textarea id="content" v-model="content" placeholder="Create a context!" required> </textarea>
     <menu>
       <button type="submit" class="pure-button-primary pure-button">Create Context</button>
-      <button class="btn-small pure-button" @click="resetStore()">Cancel</button>
+      <button class="btn-small pure-button" @click="returnHome">Cancel</button>
     </menu>
   </form>
 </template>

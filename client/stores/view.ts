@@ -1,22 +1,24 @@
 import { defineStore } from "pinia";
-import { computed, ref } from "vue";
+import { ref } from "vue";
 
 export const useViewStore = defineStore(
   "view",
   () => {
-    const openedPost = ref<Record<string, string>>();
-    const currentView = computed(() => (!openedPost.value ? "post" : "context"));
+    const openPost = ref<Record<string, string>>();
+    const currentView = ref("post");
 
     const resetStore = () => {
-      openedPost.value = undefined;
+      currentView.value = "post";
+      openPost.value = undefined;
     };
 
     const openPostContextView = (post: Record<string, string>) => {
-      openedPost.value = post;
+      currentView.value = "context";
+      openPost.value = post;
     };
 
     return {
-      openedPost,
+      openPost,
       currentView,
       resetStore,
       openPostContextView,
