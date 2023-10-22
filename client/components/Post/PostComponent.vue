@@ -4,6 +4,7 @@ import { useViewStore } from "@/stores/view";
 import { formatDate } from "@/utils/formatDate";
 import { storeToRefs } from "pinia";
 import { fetchy } from "../../utils/fetchy";
+import VoteComponent from "../VoteComponent.vue";
 
 const props = defineProps(["post"]);
 const emit = defineEmits(["editPost", "refreshPosts", "openContexts"]);
@@ -34,6 +35,7 @@ const deletePost = async () => {
       <p v-else>Created on: {{ formatDate(props.post.dateCreated) }}</p>
     </article>
   </div>
+  <VoteComponent :item-id="$props.post._id" />
 </template>
 
 <style scoped>

@@ -8,13 +8,12 @@ export interface UpvoteDoc extends BaseDoc {
 }
 
 export default class UpvoteConcept {
-
   public readonly upvotes;
 
   constructor(collectionName: string) {
     this.upvotes = new DocCollection<UpvoteDoc>(collectionName);
   }
-  
+
   async cast(user: ObjectId, target: ObjectId) {
     await this.canCastVote(user, target);
     await this.upvotes.createOne({ user, target });
@@ -22,7 +21,6 @@ export default class UpvoteConcept {
   }
 
   async retract(user: ObjectId, target: ObjectId) {
-
     await this.alreadyVoted(user, target);
     await this.upvotes.deleteOne({ user, target });
     return { msg: "Upvote removed successfully!" };
@@ -30,11 +28,15 @@ export default class UpvoteConcept {
 
   async countVotes(target: ObjectId) {
     const votes = await this.upvotes.readMany({ target });
-    return { msg: "Upvotes successfully tallied!", count: votes.length};
+    return { msg: "Upvotes successfully tallied!", count: votes.length };
+  }
+
+  async hasVoted(user: ObjectId, target: ObjectId) {
+    const votes = await this.upvotes.readOne({ user, target });
+    return { msg: "Checked if user voted for item!", voted: votes !== null };
   }
 
   async getMostUpvoted(items: ObjectId[]): Promise<ObjectId> {
-
     if (items.length === 0) {
       throw new NotAllowedError(`No items to check!`);
     }

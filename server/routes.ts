@@ -170,35 +170,72 @@ class Routes {
     return await Context.delete(_id);
   }
 
-  @Router.post("/upvotes/posts/:_id")
-  async castPostUpvote(session: WebSessionDoc, _id: ObjectId) {
+  // @Router.post("/upvotes/posts/:_id")
+  // async castPostUpvote(session: WebSessionDoc, _id: ObjectId) {
+  //   const user = WebSession.getUser(session);
+  //   await Post.isPost(_id);
+  //   return await UpvotePost.cast(user, _id);
+  // }
+
+  @Router.post("/upvotes/:_id")
+  async castUpvote(session: WebSessionDoc, _id: ObjectId) {
     const user = WebSession.getUser(session);
-    await Post.isPost(_id);
-    return await UpvotePost.cast(user, _id);
+    try {
+      return await UpvotePost.cast(user, _id);
+    } catch (e) {
+      return await UpvoteContext.cast(user, _id);
+    }
   }
 
-  @Router.delete("/upvotes/posts/:_id")
-  async retractPostUpvote(session: WebSessionDoc, _id: ObjectId) {
+  @Router.delete("/upvotes/:_id")
+  async retractUpvote(session: WebSessionDoc, _id: ObjectId) {
     const user = WebSession.getUser(session);
-    await Post.isPost(_id);
-    return await UpvotePost.retract(user, _id);
-  }
-
-  @Router.post("/upvotes/contexts/:_id")
-  async castContextUpvote(session: WebSessionDoc, _id: ObjectId) {
-    const user = WebSession.getUser(session);
-    await Context.isContext(_id);
-    return await UpvoteContext.cast(user, _id);
-  }
-
-  @Router.delete("/upvotes/contexts/:_id")
-  async retractContextUpvote(session: WebSessionDoc, _id: ObjectId) {
-    const user = WebSession.getUser(session);
-    await Context.isContext(_id);
-    return await UpvoteContext.retract(user, _id);
+    try {
+      return await UpvotePost.retract(user, _id);
+    } catch (e) {
+      return await UpvoteContext.retract(user, _id);
+    }
   }
 
   @Router.get("/upvotes/:_id")
+  async userHasUpvoted(session: WebSessionDoc, _id: ObjectId) {
+    const user = WebSession.getUser(session);
+
+    const votedForPost = await UpvotePost.hasVoted(user, _id);
+    if (votedForPost.voted) {
+      return votedForPost;
+    }
+
+    const votedForContext = await UpvoteContext.hasVoted(user, _id);
+    if (votedForContext.voted) {
+      return votedForContext;
+    }
+
+    return { msg: "Checked if user voted for item!", voted: false };
+  }
+
+  // @Router.delete("/upvotes/posts/:_id")
+  // async retractPostUpvote(session: WebSessionDoc, _id: ObjectId) {
+  //   const user = WebSession.getUser(session);
+  //   await Post.isPost(_id);
+  //   return await UpvotePost.retract(user, _id);
+  // }
+
+  // @Router.post("/upvotes/contexts/:_id")
+  // async castContextUpvote(session: WebSessionDoc, _id: ObjectId) {
+  //   const user = WebSession.getUser(session);
+  //   await Context.isContext(_id);
+  //   return await UpvoteContext.cast(user, _id);
+  // }
+
+  // @Router.delete("/upvotes/contexts/:_id")
+  // async retractContextUpvote(session: WebSessionDoc, _id: ObjectId) {
+  //   const user = WebSession.getUser(session);
+  //   await Context.isContext(_id);
+  //   return await UpvoteContext.retract(user, _id);
+  // }
+
+  @Router.get("/upvotes/count/:_id")
   async countUpvotes(_id: ObjectId) {
     const matchingPosts = await Post.getPosts({ _id });
     if (matchingPosts.length > 0) {
