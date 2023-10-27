@@ -3,8 +3,9 @@ import router from "@/router";
 import { useUserStore } from "@/stores/user";
 import { formatDate } from "@/utils/formatDate";
 import { storeToRefs } from "pinia";
-import { ref } from "vue";
+import { onBeforeMount, ref } from "vue";
 import { fetchy } from "../../utils/fetchy";
+import ContextInPostComponent from "../Context/ContextInPostComponent.vue";
 import VoteComponent from "../VoteComponent.vue";
 
 const props = defineProps(["post", "showButtons"]);
@@ -12,6 +13,8 @@ const emit = defineEmits(["editPost", "refreshPosts", "openContexts"]);
 const { currentUsername } = storeToRefs(useUserStore());
 
 const showButtons = ref(props.showButtons);
+const context = ref<Record<string, string>>();
+const loaded = ref(false);
 
 const deletePost = async () => {
   try {
@@ -31,6 +34,20 @@ function openUser() {
 function openContext() {
   void router.push({ path: "/context", query: { id: props.post._id } });
 }
+
+async function getTopContext() {
+  try {
+    const topCtx = await fetchy(`api/upvotes/posts/${props.post._id}`, "GET");
+    context.value = topCtx.item;
+  } catch {
+    return;
+  }
+}
+
+onBeforeMount(async () => {
+  await getTopContext();
+  loaded.value = true;
+});
 </script>
 
 <template>
@@ -47,6 +64,7 @@ function openContext() {
       <p v-else>Created on: {{ formatDate(props.post.dateCreated) }}</p>
     </article>
   </div>
+  <ContextInPostComponent v-if="loaded && showButtons" :context="context" />
   <VoteComponent v-if="showButtons" :item-id="$props.post._id" />
 </template>
 

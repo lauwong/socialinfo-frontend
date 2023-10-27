@@ -4,7 +4,7 @@ import { fetchy } from "@/utils/fetchy";
 import { storeToRefs } from "pinia";
 import { computed, defineEmits, defineProps, onBeforeMount, ref } from "vue";
 
-const props = defineProps(["upvotes", "itemId"]);
+const props = defineProps(["itemId"]);
 
 const emit = defineEmits(["voted"]);
 
@@ -12,7 +12,7 @@ const { isLoggedIn } = storeToRefs(useUserStore());
 
 // Props are readonly. To be able to change the votes,
 // we need to derive new reactive variables.
-const upvotes = ref(props.upvotes);
+const upvotes = ref(0);
 const userVoted = ref(false);
 const loaded = ref(false);
 
@@ -83,7 +83,7 @@ onBeforeMount(async () => {
 
 <template>
   <p v-if="isLoggedIn">
-    <button v-if="loaded" v-on:click="toggleVote" v-bind:style="{ color }">🥳 ({{ upvotes }})</button>
+    <button @click="toggleVote" v-bind:style="{ color }">🥳 ({{ upvotes }})</button>
   </p>
 </template>
 

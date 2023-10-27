@@ -3,12 +3,11 @@ import { fetchy } from "../../utils/fetchy";
 import { ref, onBeforeMount } from "vue";
 
 const props = defineProps(["user"]);
-const username = ref(props.user);
 const isFollowing = ref(false);
 
 const followUser = async () => {
   try {
-    await fetchy(`api/follows/${username.value}`, "POST");
+    await fetchy(`api/follows/${props.user}`, "POST");
     isFollowing.value = true;
   } catch {
     return;
@@ -17,7 +16,7 @@ const followUser = async () => {
 
 const unfollowUser = async () => {
   try {
-    await fetchy(`api/follows/${username.value}`, "DELETE");
+    await fetchy(`api/follows/${props.user}`, "DELETE");
     isFollowing.value = false;
   } catch {
     return;
@@ -27,7 +26,7 @@ const unfollowUser = async () => {
 async function checkFollowing() {
   let hasFollowed;
   try {
-    hasFollowed = await fetchy(`api/follows/following/${username.value}`, "GET");
+    hasFollowed = await fetchy(`api/follows/following/${props.user}`, "GET");
   } catch (_) {
     return;
   }

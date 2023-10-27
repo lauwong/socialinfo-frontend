@@ -3,7 +3,7 @@ import { ObjectId } from "mongodb";
 import { Router, getExpressRouter } from "./framework/router";
 
 import { Context, Follow, Post, UpvoteContext, UpvotePost, User, WebSession } from "./app";
-import { NotFoundError } from "./concepts/errors";
+import { NotAllowedError, NotFoundError } from "./concepts/errors";
 import { PostDoc, PostOptions } from "./concepts/post";
 import { UserDoc } from "./concepts/user";
 import { WebSessionDoc } from "./concepts/websession";
@@ -166,7 +166,15 @@ class Routes {
   @Router.post("/contexts")
   async createContext(session: WebSessionDoc, parent: ObjectId, content: string) {
     const user = WebSession.getUser(session);
-    await Post.isPost(parent);
+    const parentPost = await Post.getById(parent);
+
+    if (!parentPost) {
+      throw new NotFoundError("Parent post not found!");
+    }
+    if (parentPost.author.toString() === user.toString()) {
+      throw new NotAllowedError("User may not add context to their own post!");
+    }
+
     const created = await Context.create(new ObjectId(parent), content, user);
     return { msg: created.msg, context: await Responses.context(created.context) };
   }
@@ -178,17 +186,11 @@ class Routes {
     return await Context.delete(_id);
   }
 
-  // @Router.post("/upvotes/posts/:_id")
-  // async castPostUpvote(session: WebSessionDoc, _id: ObjectId) {
-  //   const user = WebSession.getUser(session);
-  //   await Post.isPost(_id);
-  //   return await UpvotePost.cast(user, _id);
-  // }
-
   @Router.post("/upvotes/:_id")
   async castUpvote(session: WebSessionDoc, _id: ObjectId) {
     const user = WebSession.getUser(session);
     try {
+      await Post.isPost(_id);
       return await UpvotePost.cast(user, _id);
     } catch (e) {
       return await UpvoteContext.cast(user, _id);
@@ -199,6 +201,7 @@ class Routes {
   async retractUpvote(session: WebSessionDoc, _id: ObjectId) {
     const user = WebSession.getUser(session);
     try {
+      await Post.isPost(_id);
       return await UpvotePost.retract(user, _id);
     } catch (e) {
       return await UpvoteContext.retract(user, _id);
@@ -222,27 +225,6 @@ class Routes {
     return { msg: "Checked if user voted for item!", voted: false };
   }
 
-  // @Router.delete("/upvotes/posts/:_id")
-  // async retractPostUpvote(session: WebSessionDoc, _id: ObjectId) {
-  //   const user = WebSession.getUser(session);
-  //   await Post.isPost(_id);
-  //   return await UpvotePost.retract(user, _id);
-  // }
-
-  // @Router.post("/upvotes/contexts/:_id")
-  // async castContextUpvote(session: WebSessionDoc, _id: ObjectId) {
-  //   const user = WebSession.getUser(session);
-  //   await Context.isContext(_id);
-  //   return await UpvoteContext.cast(user, _id);
-  // }
-
-  // @Router.delete("/upvotes/contexts/:_id")
-  // async retractContextUpvote(session: WebSessionDoc, _id: ObjectId) {
-  //   const user = WebSession.getUser(session);
-  //   await Context.isContext(_id);
-  //   return await UpvoteContext.retract(user, _id);
-  // }
-
   @Router.get("/upvotes/count/:_id")
   async countUpvotes(_id: ObjectId) {
     const matchingPosts = await Post.getPosts({ _id });
@@ -255,7 +237,7 @@ class Routes {
       return await UpvoteContext.countVotes(_id);
     }
 
-    return new NotFoundError(`Item with id ${_id} was not found!`);
+    throw new NotFoundError(`Item with id ${_id} was not found!`);
   }
 
   @Router.get("/upvotes/posts/:_id")
@@ -268,7 +250,7 @@ class Routes {
       return { msg: `Post ${_id} has no contexts!` };
     }
 
-    const top_id = await UpvoteContext.getMostUpvoted(contexts.map((ctx) => ctx._id));
+    const top_id = await UpvoteContext.getMostUpvoted(contexts.map((ctx) => ctx._id.toString()));
     const top_context = await Context.getById(top_id);
 
     return { msg: "Most upvoted item retrieved!", item: await Responses.context(top_context) };

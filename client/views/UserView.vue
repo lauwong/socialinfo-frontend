@@ -1,17 +1,17 @@
 <script setup lang="ts">
 import router from "@/router";
-import { onBeforeMount, ref } from "vue";
+import { computed, onBeforeMount, ref } from "vue";
 import { useRoute } from "vue-router";
 import FollowButton from "../components/Follow/FollowButton.vue";
 import UserPostListComponent from "../components/Post/UserPostListComponent.vue";
 
 const route = useRoute();
-const username = ref();
+const username = computed(() => route.query.username);
 const loaded = ref(false);
+const componentKey = ref(0);
 
 onBeforeMount(async () => {
   await router.isReady();
-  username.value = route.query.username;
   loaded.value = true;
 });
 </script>
@@ -19,8 +19,8 @@ onBeforeMount(async () => {
 <template>
   <main>
     <h1>{{ username }}</h1>
-    <FollowButton :user="username" />
-    <UserPostListComponent v-if="loaded" v-bind:user="username" :name="'Hello'" />
+    <FollowButton v-if="loaded" :user="username" :key="componentKey" />
+    <UserPostListComponent v-if="loaded" v-bind:user="username" />
   </main>
 </template>
 

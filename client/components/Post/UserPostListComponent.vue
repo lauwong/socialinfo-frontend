@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import EditPostForm from "@/components/Post/EditPostForm.vue";
 import PostComponent from "@/components/Post/PostComponent.vue";
-import router from "@/router";
 import { fetchy } from "@/utils/fetchy";
 import { onBeforeMount, ref } from "vue";
 
@@ -36,7 +35,6 @@ function updateEditing(id: string) {
 }
 
 onBeforeMount(async () => {
-  await router.isReady();
   await getPosts();
   loaded.value = true;
 });

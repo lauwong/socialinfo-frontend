@@ -7,13 +7,12 @@ const content = ref("");
 const emit = defineEmits(["refreshContexts"]);
 
 const props = defineProps(["post"]);
-const post = ref(props.post);
 
 const createContext = async (content: string) => {
-  if (!post.value) {
+  if (!props.post) {
     throw new Error("Tried to create context for undefined post!");
   }
-  const parent = post.value._id;
+  const parent = props.post._id;
 
   try {
     await fetchy("api/contexts", "POST", {
