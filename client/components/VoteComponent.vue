@@ -68,9 +68,17 @@ const toggleVote = async () => {
 
 const color = computed(() => {
   if (userVoted.value) {
-    return "green";
+    return "#0172e0";
   } else {
-    return "blue";
+    return "black";
+  }
+});
+
+const emoji = computed(() => {
+  if (userVoted.value) {
+    return "♥";
+  } else {
+    return "♡";
   }
 });
 
@@ -83,7 +91,7 @@ onBeforeMount(async () => {
 
 <template>
   <p v-if="isLoggedIn">
-    <button @click="toggleVote" v-bind:style="{ color }">🥳 ({{ upvotes }})</button>
+    <button @click="toggleVote" v-bind:style="{ color }">{{ emoji }} ({{ upvotes }})</button>
   </p>
 </template>
 

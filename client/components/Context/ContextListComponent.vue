@@ -61,7 +61,9 @@ onBeforeMount(async () => {
 
 <template>
   <section>
-    <PostComponent :post="openPost" />
+    <article>
+      <PostComponent :post="openPost" />
+    </article>
   </section>
   <section v-if="isLoggedIn">
     <h2>Create a context:</h2>

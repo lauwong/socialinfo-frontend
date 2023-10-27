@@ -27,19 +27,21 @@ function openUser() {
 </script>
 
 <template>
-  <p @click="openUser" class="author">{{ props.context.author }}</p>
-  <p>{{ props.context.content }}</p>
-  <div class="base">
+  <div class="head">
+    <p @click="openUser" class="author">{{ props.context.author }}</p>
     <menu v-if="props.context.author == currentUsername">
       <li><button class="btn-small pure-button" @click="emit('editContext', props.context._id)">Edit</button></li>
       <li><button class="button-error btn-small pure-button" @click="deleteContext">Delete</button></li>
     </menu>
+  </div>
+  <p>{{ props.context.content }}</p>
+  <div class="base">
+    <VoteComponent :item-id="$props.context._id" />
     <article class="timestamp">
       <p v-if="props.context.dateCreated !== props.context.dateUpdated">Edited on: {{ formatDate(props.context.dateUpdated) }}</p>
       <p v-else>Created on: {{ formatDate(props.context.dateCreated) }}</p>
     </article>
   </div>
-  <VoteComponent :item-id="$props.context._id" />
 </template>
 
 <style scoped>
@@ -59,6 +61,11 @@ menu {
   gap: 1em;
   padding: 0;
   margin: 0;
+}
+
+.head {
+  display: flex;
+  justify-content: space-between;
 }
 
 .timestamp {

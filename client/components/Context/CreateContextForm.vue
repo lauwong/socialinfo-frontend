@@ -40,7 +40,7 @@ const returnHome = () => {
     <textarea id="content" v-model="content" placeholder="Create a context!" required> </textarea>
     <menu>
       <button type="submit" class="pure-button-primary pure-button">Create Context</button>
-      <button class="btn-small pure-button" @click="returnHome">Cancel</button>
+      <button class="pure-button" @click="returnHome">Cancel</button>
     </menu>
   </form>
 </template>

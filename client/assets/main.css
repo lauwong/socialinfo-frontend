@@ -2,7 +2,9 @@
 
 :root {
   --red: rgb(208, 67, 12);
-  --base-bg: #f1f3f5;
+  --base-bg: #e6f2ff;
+  --light-bg: #d2e9ff;
+  --snow-bg: #f0f8ff;
 }
 
 button.btn-small {

@@ -51,21 +51,25 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <p @click="openUser" class="author">{{ props.post.author }}</p>
-  <button v-if="showButtons" @click="openContext">Open Contexts</button>
-  <p>{{ props.post.content }}</p>
-  <div class="base">
-    <menu v-if="props.post.author == currentUsername && showButtons">
-      <li><button class="btn-small pure-button" @click="emit('editPost', props.post._id)">Edit</button></li>
-      <li><button class="button-error btn-small pure-button" @click="deletePost">Delete</button></li>
+  <div class="head">
+    <p @click="openUser" class="author">{{ props.post.author }}</p>
+    <menu v-if="showButtons">
+      <li><button class="btn-small pure-button" @click="openContext">Contexts</button></li>
+      <li><button v-if="props.post.author == currentUsername" class="btn-small pure-button" @click="emit('editPost', props.post._id)">Edit</button></li>
+      <li><button v-if="props.post.author == currentUsername" class="button-error btn-small pure-button" @click="deletePost">Delete</button></li>
     </menu>
+  </div>
+  <p>{{ props.post.content }}</p>
+  <article class="context">
+    <ContextInPostComponent v-if="loaded && showButtons" :context="context" />
+  </article>
+  <div class="base">
+    <VoteComponent v-if="showButtons" :item-id="$props.post._id" />
     <article class="timestamp">
       <p v-if="props.post.dateCreated !== props.post.dateUpdated">Edited on: {{ formatDate(props.post.dateUpdated) }}</p>
       <p v-else>Created on: {{ formatDate(props.post.dateCreated) }}</p>
     </article>
   </div>
-  <ContextInPostComponent v-if="loaded && showButtons" :context="context" />
-  <VoteComponent v-if="showButtons" :item-id="$props.post._id" />
 </template>
 
 <style scoped>
@@ -94,10 +98,24 @@ menu {
   font-style: italic;
 }
 
+.head {
+  display: flex;
+  justify-content: space-between;
+}
+
 .base {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.context {
+  background-color: var(--light-bg);
+  border-radius: 1em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  padding: 1em;
 }
 
 .base article:only-child {

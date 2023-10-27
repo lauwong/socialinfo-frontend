@@ -23,7 +23,7 @@ onBeforeMount(async () => {
 </template>
 
 <style scoped>
-h1 {
-  text-align: center;
+main {
+  padding: 1em;
 }
 </style>

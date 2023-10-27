@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { formatDate } from "@/utils/formatDate";
 import router from "../../router";
 
 const props = defineProps(["context"]);
@@ -15,12 +14,6 @@ function openUser() {
 <template>
   <p @click="openUser" class="author">{{ props.context.author }}</p>
   <p>{{ props.context.content }}</p>
-  <div class="base">
-    <article class="timestamp">
-      <p v-if="props.context.dateCreated !== props.context.dateUpdated">Edited on: {{ formatDate(props.context.dateUpdated) }}</p>
-      <p v-else>Created on: {{ formatDate(props.context.dateCreated) }}</p>
-    </article>
-  </div>
 </template>
 
 <style scoped>
@@ -31,31 +24,5 @@ p {
 .author {
   font-weight: bold;
   font-size: 1.2em;
-}
-
-menu {
-  list-style-type: none;
-  display: flex;
-  flex-direction: row;
-  gap: 1em;
-  padding: 0;
-  margin: 0;
-}
-
-.timestamp {
-  display: flex;
-  justify-content: flex-end;
-  font-size: 0.9em;
-  font-style: italic;
-}
-
-.base {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.base article:only-child {
-  margin-left: auto;
 }
 </style>
