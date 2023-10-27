@@ -189,35 +189,37 @@ class Routes {
   @Router.post("/upvotes/:_id")
   async castUpvote(session: WebSessionDoc, _id: ObjectId) {
     const user = WebSession.getUser(session);
+    const id = new ObjectId(_id);
     try {
       await Post.isPost(_id);
-      return await UpvotePost.cast(user, _id);
+      return await UpvotePost.cast(user, id);
     } catch (e) {
-      return await UpvoteContext.cast(user, _id);
+      return await UpvoteContext.cast(user, id);
     }
   }
 
   @Router.delete("/upvotes/:_id")
   async retractUpvote(session: WebSessionDoc, _id: ObjectId) {
     const user = WebSession.getUser(session);
+    const id = new ObjectId(_id);
     try {
       await Post.isPost(_id);
-      return await UpvotePost.retract(user, _id);
+      return await UpvotePost.retract(user, id);
     } catch (e) {
-      return await UpvoteContext.retract(user, _id);
+      return await UpvoteContext.retract(user, id);
     }
   }
 
   @Router.get("/upvotes/:_id")
   async userHasUpvoted(session: WebSessionDoc, _id: ObjectId) {
     const user = WebSession.getUser(session);
-
-    const votedForPost = await UpvotePost.hasVoted(user, _id);
+    const id = new ObjectId(_id);
+    const votedForPost = await UpvotePost.hasVoted(user, id);
     if (votedForPost.voted) {
       return votedForPost;
     }
 
-    const votedForContext = await UpvoteContext.hasVoted(user, _id);
+    const votedForContext = await UpvoteContext.hasVoted(user, id);
     if (votedForContext.voted) {
       return votedForContext;
     }
@@ -228,13 +230,14 @@ class Routes {
   @Router.get("/upvotes/count/:_id")
   async countUpvotes(_id: ObjectId) {
     const matchingPosts = await Post.getPosts({ _id });
+    const id = new ObjectId(_id);
     if (matchingPosts.length > 0) {
-      return await UpvotePost.countVotes(_id);
+      return await UpvotePost.countVotes(id);
     }
 
     const matchingContexts = await Context.getContexts({ _id });
     if (matchingContexts.length > 0) {
-      return await UpvoteContext.countVotes(_id);
+      return await UpvoteContext.countVotes(id);
     }
 
     throw new NotFoundError(`Item with id ${_id} was not found!`);
@@ -250,7 +253,7 @@ class Routes {
       return { msg: `Post ${_id} has no contexts!` };
     }
 
-    const top_id = await UpvoteContext.getMostUpvoted(contexts.map((ctx) => ctx._id.toString()));
+    const top_id = await UpvoteContext.getMostUpvoted(contexts.map((ctx) => ctx._id));
     const top_context = await Context.getById(top_id);
 
     return { msg: "Most upvoted item retrieved!", item: await Responses.context(top_context) };
