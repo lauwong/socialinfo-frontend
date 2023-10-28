@@ -92,9 +92,7 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <p v-if="isLoggedIn">
-    <button @mouseover="hover = true" @mouseleave="hover = false" @click="toggleVote" v-bind:style="{ color }">{{ emoji }} {{ upvotes }}</button>
-  </p>
+  <button v-if="isLoggedIn" @mouseover="hover = true" @mouseleave="hover = false" @click="toggleVote" v-bind:style="{ color }">{{ emoji }} {{ upvotes }}</button>
 </template>
 
 <style scoped>

@@ -1,8 +1,10 @@
 /* Add some global styles here! */
+@import url("https://use.typekit.net/tdi0rie.css");
 
 :root {
   --red: rgb(208, 67, 12);
   --base-bg: white;
+  --franklin-gothic: franklin-gothic-urw;
 }
 
 button.btn-small {
@@ -12,6 +14,10 @@ button.btn-small {
 button.button-error {
   color: white;
   background: var(--red);
+}
+
+a,p,h1 {
+  font-family: franklin-gothic-urw, Arial, sans-serif
 }
 
 a.button {

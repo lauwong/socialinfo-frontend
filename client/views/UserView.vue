@@ -8,7 +8,6 @@ import UserPostListComponent from "../components/Post/UserPostListComponent.vue"
 const route = useRoute();
 const username = computed(() => route.query.username);
 const loaded = ref(false);
-const componentKey = ref(0);
 
 onBeforeMount(async () => {
   await router.isReady();
@@ -19,7 +18,7 @@ onBeforeMount(async () => {
 <template>
   <main>
     <h1>{{ username }}</h1>
-    <FollowButton v-if="loaded" :user="username" :key="componentKey" />
+    <FollowButton v-if="loaded" :user="username" />
     <UserPostListComponent v-if="loaded" v-bind:user="username" />
   </main>
 </template>

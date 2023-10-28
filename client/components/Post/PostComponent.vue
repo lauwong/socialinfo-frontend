@@ -73,6 +73,8 @@ onBeforeMount(async () => {
 </template>
 
 <style scoped>
+@import url("https://use.typekit.net/tdi0rie.css");
+
 p {
   margin: 0em;
 }

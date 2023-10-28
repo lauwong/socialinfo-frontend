@@ -51,6 +51,7 @@ onBeforeMount(async () => {
 
 <style scoped>
 @import "./assets/toast.css";
+@import url("https://use.typekit.net/tdi0rie.css");
 
 nav {
   padding: 1em 2em;
@@ -63,6 +64,7 @@ h1 {
   font-size: 2em;
   margin: 0;
   color: white;
+  font-family: franklin-gothic-urw;
 }
 
 .title {

@@ -68,6 +68,8 @@ onBeforeMount(async () => {
 </template>
 
 <style scoped>
+@import url("https://use.typekit.net/tdi0rie.css");
+
 section {
   display: flex;
   flex-direction: column;
@@ -79,6 +81,7 @@ p,
 .row {
   margin: 0 auto;
   max-width: 60em;
+  font-family: franklin-gothic-urw;
 }
 
 article {
