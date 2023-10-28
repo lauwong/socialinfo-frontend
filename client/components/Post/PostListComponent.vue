@@ -20,8 +20,16 @@ let viewMode = ref("following");
 async function getPosts(author?: string) {
   let query: Record<string, string> = author !== undefined ? { author } : {};
   let postResults;
+
+  let mode;
+  if (viewMode.value === "following" && isLoggedIn.value) {
+    mode = "following";
+  } else {
+    mode = "all";
+  }
+
   try {
-    postResults = await fetchy(`api/posts/${viewMode.value}`, "GET", { query });
+    postResults = await fetchy(`api/posts/${mode}`, "GET", { query });
   } catch (_) {
     return;
   }
@@ -45,7 +53,7 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <nav class="sticky">
+  <nav v-if="isLoggedIn" class="sticky">
     <BinaryPostButtons v-on:set-post-view-mode="updateMode" />
   </nav>
   <section v-if="isLoggedIn">
