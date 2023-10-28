@@ -5,7 +5,7 @@ import PostComponent from "@/components/Post/PostComponent.vue";
 import { useUserStore } from "@/stores/user";
 import { fetchy } from "@/utils/fetchy";
 import { storeToRefs } from "pinia";
-import { onMounted, ref } from "vue";
+import { onBeforeMount, ref } from "vue";
 import BinaryPostButtons from "./BinaryPostButtons.vue";
 import SearchPostForm from "./SearchPostForm.vue";
 
@@ -39,12 +39,28 @@ async function updateMode(mode: string) {
   await getPosts();
 }
 
-onMounted(async () => {
-  if (isLoggedIn.value) {
+async function getStartMode() {
+  if (!isLoggedIn.value) {
+    viewMode.value = "all";
+    return;
+  }
+
+  let following;
+  try {
+    following = await fetchy(`api/follows/following`, "GET");
+  } catch (_) {
+    viewMode.value = "all";
+    return;
+  }
+  if (following.length > 0) {
     viewMode.value = "following";
   } else {
     viewMode.value = "all";
   }
+}
+
+onBeforeMount(async () => {
+  await getStartMode();
   await getPosts();
   loaded.value = true;
 });

@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { onBeforeMount } from "vue";
-
 const props = defineProps(["viewMode"]);
 const emit = defineEmits(["setPostViewMode"]);
 
@@ -12,9 +10,9 @@ function viewAll() {
   emit("setPostViewMode", "all");
 }
 
-onBeforeMount(() => {
-  emit("setPostViewMode", "following");
-});
+// onBeforeMount(() => {
+//   emit("setPostViewMode", "following");
+// });
 </script>
 
 <template>
