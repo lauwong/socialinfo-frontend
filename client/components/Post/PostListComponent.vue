@@ -45,6 +45,9 @@ onBeforeMount(async () => {
 </script>
 
 <template>
+  <nav class="sticky">
+    <BinaryPostButtons v-on:set-post-view-mode="updateMode" />
+  </nav>
   <section v-if="isLoggedIn">
     <h2>Create a post:</h2>
     <CreatePostForm @refreshPosts="getPosts" />
@@ -52,7 +55,6 @@ onBeforeMount(async () => {
   <div class="row">
     <h2 v-if="!searchAuthor">Posts:</h2>
     <h2 v-else>Posts by {{ searchAuthor }}:</h2>
-    <BinaryPostButtons v-on:set-post-view-mode="updateMode" />
     <SearchPostForm @getPostsByAuthor="getPosts" />
   </div>
   <section class="posts" v-if="loaded && posts.length !== 0">
@@ -80,8 +82,9 @@ p,
 }
 
 article {
-  background-color: var(--base-bg);
-  border-radius: 1em;
+  border-color: black;
+  border-width: 0.2em;
+  border-style: solid;
   display: flex;
   flex-direction: column;
   gap: 0.5em;
@@ -97,5 +100,15 @@ article {
   justify-content: space-between;
   margin: 0 auto;
   max-width: 60em;
+}
+
+nav.sticky {
+  /* padding: 1em 2em; */
+  background-color: black;
+  display: flex;
+  justify-content: center;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
 }
 </style>

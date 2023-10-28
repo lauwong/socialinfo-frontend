@@ -55,13 +55,13 @@ onBeforeMount(async () => {
     <p @click="openUser" class="author">{{ props.post.author }}</p>
     <menu v-if="showButtons">
       <li><button class="btn-small pure-button" @click="openContext">Contexts</button></li>
-      <li><button v-if="props.post.author == currentUsername" class="btn-small pure-button" @click="emit('editPost', props.post._id)">Edit</button></li>
-      <li><button v-if="props.post.author == currentUsername" class="button-error btn-small pure-button" @click="deletePost">Delete</button></li>
+      <li v-if="props.post.author == currentUsername"><button class="btn-small pure-button" @click="emit('editPost', props.post._id)">Edit</button></li>
+      <li v-if="props.post.author == currentUsername"><button class="button-error btn-small pure-button" @click="deletePost">Delete</button></li>
     </menu>
   </div>
   <p>{{ props.post.content }}</p>
-  <article class="context">
-    <ContextInPostComponent v-if="loaded && showButtons" :context="context" />
+  <article v-if="loaded && showButtons" class="context">
+    <ContextInPostComponent :context="context" />
   </article>
   <div class="base">
     <VoteComponent v-if="showButtons" :item-id="$props.post._id" />
@@ -110,8 +110,9 @@ menu {
 }
 
 .context {
-  background-color: var(--light-bg);
-  border-radius: 1em;
+  border-color: black;
+  border-width: 0.2em;
+  border-style: solid;
   display: flex;
   flex-direction: column;
   gap: 0.5em;

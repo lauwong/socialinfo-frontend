@@ -97,8 +97,9 @@ p,
 }
 
 article {
-  background-color: var(--base-bg);
-  border-radius: 1em;
+  border-color: black;
+  border-width: 0.2em;
+  border-style: solid;
   display: flex;
   flex-direction: column;
   gap: 0.5em;

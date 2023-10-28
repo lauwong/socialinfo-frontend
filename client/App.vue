@@ -54,7 +54,7 @@ onBeforeMount(async () => {
 
 nav {
   padding: 1em 2em;
-  background-color: #5badfe;
+  background-color: black;
   display: flex;
   align-items: center;
 }
@@ -62,6 +62,7 @@ nav {
 h1 {
   font-size: 2em;
   margin: 0;
+  color: white;
 }
 
 .title {
@@ -76,7 +77,7 @@ img {
 
 a {
   font-size: large;
-  color: black;
+  color: white;
   text-decoration: none;
 }
 

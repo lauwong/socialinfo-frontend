@@ -15,6 +15,8 @@ const { isLoggedIn } = storeToRefs(useUserStore());
 const upvotes = ref(0);
 const userVoted = ref(false);
 const loaded = ref(false);
+const hover = ref(false);
+const highlight = computed(() => userVoted.value || hover.value);
 
 async function upvoteItem() {
   try {
@@ -67,15 +69,15 @@ const toggleVote = async () => {
 };
 
 const color = computed(() => {
-  if (userVoted.value) {
-    return "#0172e0";
+  if (highlight.value) {
+    return "rgb(208, 67, 12)";
   } else {
     return "black";
   }
 });
 
 const emoji = computed(() => {
-  if (userVoted.value) {
+  if (highlight.value) {
     return "♥";
   } else {
     return "♡";
@@ -91,19 +93,20 @@ onBeforeMount(async () => {
 
 <template>
   <p v-if="isLoggedIn">
-    <button @click="toggleVote" v-bind:style="{ color }">{{ emoji }} ({{ upvotes }})</button>
+    <button @mouseover="hover = true" @mouseleave="hover = false" @click="toggleVote" v-bind:style="{ color }">{{ emoji }} {{ upvotes }}</button>
   </p>
 </template>
 
 <style scoped>
 button {
   background: transparent;
-  border-radius: 1rem;
+  /* border-radius: 1rem; */
+  border: none;
   margin-right: 1rem;
   cursor: pointer;
 }
 
-button:hover {
+/* button:hover {
   background: rgb(246, 246, 189);
-}
+} */
 </style>

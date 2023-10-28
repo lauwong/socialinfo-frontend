@@ -38,17 +38,18 @@ const returnHome = () => {
   <form @submit.prevent="createContext(content)">
     <label for="content">Context Contents:</label>
     <textarea id="content" v-model="content" placeholder="Create a context!" required> </textarea>
-    <menu>
-      <button type="submit" class="pure-button-primary pure-button">Create Context</button>
+    <div class="container">
       <button class="pure-button" @click="returnHome">Cancel</button>
-    </menu>
+      <button type="submit" class="button-error pure-button">Create Context</button>
+    </div>
   </form>
 </template>
 
 <style scoped>
 form {
-  background-color: var(--base-bg);
-  border-radius: 1em;
+  border-color: black;
+  border-width: 0.2em;
+  border-style: solid;
   display: flex;
   flex-direction: column;
   gap: 0.5em;
@@ -60,7 +61,18 @@ textarea {
   font-size: inherit;
   height: 6em;
   padding: 0.5em;
-  border-radius: 4px;
   resize: none;
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+  gap: 1em;
+  padding: 0;
+  margin: 0;
+}
+
+button {
+  flex: 1 0 auto;
 }
 </style>

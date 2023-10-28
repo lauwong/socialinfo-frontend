@@ -17,19 +17,28 @@ function viewAll() {
 </script>
 
 <template>
-  <div class="pure-button-group" role="group">
+  <div id="toggle-group" role="group">
+    <a :class="{ selected: mode === 'following' }" v-on:click="viewFollowing">Following</a>
+    <a :class="{ selected: mode === 'all' }" v-on:click="viewAll">All</a>
+  </div>
+  <!-- <div class="pure-button-group" role="group">
     <button class="pure-button" :class="{ selected: mode === 'following' }" v-on:click="viewFollowing">Following</button>
     <button class="pure-button" :class="{ selected: mode === 'all' }" v-on:click="viewAll">All</button>
-  </div>
+  </div> -->
 </template>
 
 <style scoped>
-div.pure-button-group {
-  padding: 2em;
+div#toggle-group {
+  padding: 1em;
+}
+
+a {
+  color: white;
+  padding: 1em;
 }
 
 .selected {
-  background: #0078e7;
+  text-decoration: underline;
   color: var(--base-bg);
 }
 </style>
