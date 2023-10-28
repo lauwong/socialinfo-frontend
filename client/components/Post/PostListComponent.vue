@@ -5,7 +5,7 @@ import PostComponent from "@/components/Post/PostComponent.vue";
 import { useUserStore } from "@/stores/user";
 import { fetchy } from "@/utils/fetchy";
 import { storeToRefs } from "pinia";
-import { onBeforeMount, ref } from "vue";
+import { onMounted, ref } from "vue";
 import BinaryPostButtons from "./BinaryPostButtons.vue";
 import SearchPostForm from "./SearchPostForm.vue";
 
@@ -39,7 +39,17 @@ async function updateMode(mode: string) {
   await getPosts();
 }
 
-onBeforeMount(async () => {
+// onBeforeMount(async () => {
+//   await getPosts();
+
+// });
+
+onMounted(async () => {
+  if (isLoggedIn.value) {
+    viewMode.value = "following";
+  } else {
+    viewMode.value = "all";
+  }
   await getPosts();
   loaded.value = true;
 });
@@ -47,7 +57,7 @@ onBeforeMount(async () => {
 
 <template>
   <nav v-if="isLoggedIn" class="sticky">
-    <BinaryPostButtons v-on:set-post-view-mode="updateMode" />
+    <BinaryPostButtons :view-mode="viewMode" v-on:set-post-view-mode="updateMode" />
   </nav>
   <section v-if="isLoggedIn">
     <h2>Create a post:</h2>

@@ -1,29 +1,26 @@
 <script setup lang="ts">
-import { onBeforeMount, ref } from "vue";
+import { onBeforeMount } from "vue";
 
+const props = defineProps(["viewMode"]);
 const emit = defineEmits(["setPostViewMode"]);
 
-const mode = ref("following");
-
 function viewFollowing() {
-  mode.value = "following";
-  emit("setPostViewMode", mode.value);
+  emit("setPostViewMode", "following");
 }
 
 function viewAll() {
-  mode.value = "all";
-  emit("setPostViewMode", mode.value);
+  emit("setPostViewMode", "all");
 }
 
 onBeforeMount(() => {
-  emit("setPostViewMode", mode.value);
+  emit("setPostViewMode", "following");
 });
 </script>
 
 <template>
   <div id="toggle-group" role="group">
-    <a :class="{ selected: mode === 'following' }" v-on:click="viewFollowing">Following</a>
-    <a :class="{ selected: mode === 'all' }" v-on:click="viewAll">All</a>
+    <a :class="{ selected: props.viewMode === 'following' }" v-on:click="viewFollowing">Following</a>
+    <a :class="{ selected: props.viewMode === 'all' }" v-on:click="viewAll">All</a>
   </div>
 </template>
 
