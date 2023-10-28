@@ -39,11 +39,6 @@ async function updateMode(mode: string) {
   await getPosts();
 }
 
-// onBeforeMount(async () => {
-//   await getPosts();
-
-// });
-
 onMounted(async () => {
   if (isLoggedIn.value) {
     viewMode.value = "following";
