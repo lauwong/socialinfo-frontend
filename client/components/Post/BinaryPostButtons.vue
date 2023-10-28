@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { onBeforeMount, ref } from "vue";
 
 const emit = defineEmits(["setPostViewMode"]);
 
@@ -14,6 +14,10 @@ function viewAll() {
   mode.value = "all";
   emit("setPostViewMode", mode.value);
 }
+
+onBeforeMount(() => {
+  emit("setPostViewMode", mode.value);
+});
 </script>
 
 <template>
@@ -35,6 +39,7 @@ div#toggle-group {
 a {
   color: white;
   padding: 1em;
+  font-size: 1.2em;
 }
 
 .selected {

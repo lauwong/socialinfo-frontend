@@ -15,21 +15,14 @@ const loaded = ref(false);
 let posts = ref<Array<Record<string, string>>>([]);
 let editing = ref("");
 let searchAuthor = ref("");
-let viewMode = ref("following");
+let viewMode = ref("all");
 
 async function getPosts(author?: string) {
   let query: Record<string, string> = author !== undefined ? { author } : {};
   let postResults;
 
-  let mode;
-  if (viewMode.value === "following" && isLoggedIn.value) {
-    mode = "following";
-  } else {
-    mode = "all";
-  }
-
   try {
-    postResults = await fetchy(`api/posts/${mode}`, "GET", { query });
+    postResults = await fetchy(`api/posts/${viewMode.value}`, "GET", { query });
   } catch (_) {
     return;
   }
